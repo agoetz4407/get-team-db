@@ -100,17 +100,27 @@ const addDepartment = () => {
     inquirer.prompt(addDepartmentQuestion)
     .then(answer => {
         sql = 'INSERT INTO departments (name) VALUES (?)';
-        params = answer.departmentName;
+        params = [answer.departmentName];
         db.query(sql, params, (err, rows) => {
             if (err) throw err;
-            console.log('\n');
-            console.table(rows);
+            console.log(`The ${answer.departmentName} department has been added to the database`);
             actionPrompt();
         })
     })
 };
 
-const addRole = () => {};
+const addRole = () => {
+    inquirer.prompt(addRoleQuestions)
+    .then(answers => {
+        sql = 'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)';
+        params = [answers.roleName, answers.salary, answers.departmentId];
+        db.query(sql, params, (err, rows) => {
+            if (err) throw err;
+            console.log(`The ${answers.roleName} role has been added to the database`);
+            actionPrompt();
+        })
+    })
+};
 
 const addEmployee = () => {};
 
