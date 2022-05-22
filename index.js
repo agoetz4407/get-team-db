@@ -47,5 +47,25 @@ const actionPrompt = () => {
                 break;
         }
     })
-}
+};
+
+const viewDepartments = () => {
+    const sql = 'SELECT * FROM departments'
+    db.query(sql, (err, rows) => {
+        if (err) throw err;
+        console.table(rows)
+    })
+};
+
+const viewRoles = () => {};
+
+const viewEmployees = () => {};
+
+const addDepartment = () => {};
+
+const addRole = () => {};
+
+const addEmployee = () => {};
+
+const updateRole = () => {};
 
