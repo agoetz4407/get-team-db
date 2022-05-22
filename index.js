@@ -53,11 +53,25 @@ const viewDepartments = () => {
     const sql = 'SELECT * FROM departments'
     db.query(sql, (err, rows) => {
         if (err) throw err;
-        console.table(rows)
+        console.table(rows);
+        actionPrompt();
     })
 };
 
-const viewRoles = () => {};
+const viewRoles = () => {
+    const sql = `SELECT 
+    roles.id,
+    roles.title,
+    roles.salary,
+    departments.name AS 'department'
+    FROM roles
+    LEFT JOIN departments ON roles.department_id = departments.id;`
+    db.query(sql, (err, rows) => {
+        if (err) throw err;
+        console.table(rows);
+        actionPrompt();
+    })
+};
 
 const viewEmployees = () => {};
 
