@@ -40,7 +40,7 @@ const actionPrompt = () => {
                 addEmployee();
                 break;
             case "Update an employee's role":
-                updateRole();
+                updateEmpRole();
                 break;
             case 'Quit Application':
                 db.end();
@@ -99,8 +99,8 @@ const viewEmployees = () => {
 const addDepartment = () => {
     inquirer.prompt(addDepartmentQuestion)
     .then(answer => {
-        sql = 'INSERT INTO departments (name) VALUES (?)';
-        params = [answer.departmentName];
+        const sql = 'INSERT INTO departments (name) VALUES (?)';
+        const params = [answer.departmentName];
         db.query(sql, params, (err, rows) => {
             if (err) throw err;
             console.log(`The ${answer.departmentName} department has been added to the database`);
@@ -112,8 +112,8 @@ const addDepartment = () => {
 const addRole = () => {
     inquirer.prompt(addRoleQuestions)
     .then(answers => {
-        sql = 'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)';
-        params = [answers.roleName, answers.salary, answers.departmentId];
+        const sql = 'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)';
+        const params = [answers.roleName, answers.salary, answers.departmentId];
         db.query(sql, params, (err, rows) => {
             if (err) throw err;
             console.log(`The ${answers.roleName} role has been added to the database`);
@@ -122,7 +122,59 @@ const addRole = () => {
     })
 };
 
-const addEmployee = () => {};
+const addEmployee = () => {
+    inquirer.prompt(addEmployeeQuestions)
+    .then(answers => {
+        const sql = `INSERT INTO
+        employees (first_name, last_name, role_id, manager_id)
+        VALUES (?, ?, ?, ?)`;
+        const params = [answers.empFirstName, answers.empLastName, answers.empRoleId, answers.empManagerId];
+        db.query(sql, params, (err, rows) => {
+            if (err) throw err;
+            console.log(`${answers.empFirstName} ${answers.empLastName} has been added to the database`);
+            actionPrompt();
+        })
+    })
+};
 
-const updateRole = () => {};
+const updateEmpRole = () => {
+    const empArr = [];
+    const roleArr = [];
+    const empsql = `SELECT CONCAT (employees.first_name, ' ', employees.last_name) AS employee FROM employees`;
+    const rolesql = `SELECT title FROM roles`
+    db.query(empsql, (err, rows) => {
+        if (err) throw err;
+        for (let i = 0; i < rows.length; i++) {
+            empArr.push(rows[i].employee)
+        }
+    })
+    db.query(rolesql, (err, rows) => {
+        if (err) throw err;
+        for (let i = 0; i < rows.length; i++) {
+            roleArr.push(rows[i].title)
+        }
+    })
+    inquirer.prompt([
+        {
+            message: "Which employee's role would you like to change?",
+            type: 'list',
+            name: 'empName',
+            choices: empArr
+        },
+        {
+            message: 'What is the new role of the employee?',
+            type: 'list',
+            name: 'newRole',
+            choices: roleArr
+        }
+    ])
+    .then(answers => {
+        let empRole;
+        let empNameArr = answers.empName.split(' ');
+        const sql = `SELECT id FROM roles WHERE title = '${answers.newRole}'`
+        db.query(sql, (err, rows) => {
+            
+        })
+    })
+};
 
