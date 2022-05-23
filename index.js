@@ -137,29 +137,6 @@ const addEmployee = () => {
     })
 };
 
-// const getEmployeeChoices = async () => {
-//     const sql = `SELECT CONCAT (employees.first_name, ' ', employees.last_name) AS employee FROM employees`;
-//     db.query(sql, (err, rows) => {
-//         if (err) throw err;
-//         for (let i = 0; i < rows.length; i++) {
-//             empChoicesArr.push(rows[i].employee)
-//         }
-//     }) 
-//     return empChoicesArr;
-// }
-
-// getRoleChoices = async () => {
-//     const sql = `SELECT title FROM roles`;
-//     const roleChoicesArr = [];
-//     db.query(sql, (err, rows) => {
-//         if (err) throw err;
-//         for (let i = 0; i < rows.length; i++) {
-//             roleChoicesArr.push(rows[i].title)
-//         }
-//     })
-//     return roleChoicesArr;
-// }
-
 const updateEmpRole = () => {
     const empChoicesArr = [];
     const roleChoicesArr = [];
