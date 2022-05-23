@@ -7,7 +7,7 @@ Get-Team-DB is a command line app using Node.js that prompts the user with actio
 Clone this repository down to your device. Ensure Node.js is installed on your device, then type "npm install" in the command line to download dependencies for this app.
 
 ## Usage
-See this [example video](https://drive.google.com/file/d/1aRV48XGUgZJr3azmy39FrEi78KQug-SM/view) for an example of usage.
+See this [example video](https://drive.google.com/file/d/1k_LO6CtP8H55hh1wXoP5nW7GZb2WOXza/view) for an example of usage.
 
 Type `node index.js` in a terminal opened in the root directory of the app to run it. Follow the prompts after setting up the information for your local database connection.
 
