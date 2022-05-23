@@ -137,64 +137,76 @@ const addEmployee = () => {
     })
 };
 
-const getEmployeeChoices = async () => {
-    const sql = `SELECT CONCAT (employees.first_name, ' ', employees.last_name) AS employee FROM employees`;
+// const getEmployeeChoices = async () => {
+//     const sql = `SELECT CONCAT (employees.first_name, ' ', employees.last_name) AS employee FROM employees`;
+//     db.query(sql, (err, rows) => {
+//         if (err) throw err;
+//         for (let i = 0; i < rows.length; i++) {
+//             empChoicesArr.push(rows[i].employee)
+//         }
+//     }) 
+//     return empChoicesArr;
+// }
+
+// getRoleChoices = async () => {
+//     const sql = `SELECT title FROM roles`;
+//     const roleChoicesArr = [];
+//     db.query(sql, (err, rows) => {
+//         if (err) throw err;
+//         for (let i = 0; i < rows.length; i++) {
+//             roleChoicesArr.push(rows[i].title)
+//         }
+//     })
+//     return roleChoicesArr;
+// }
+
+const updateEmpRole = () => {
     const empChoicesArr = [];
-    db.query(sql, (err, rows) => {
+    const roleChoicesArr = [];
+    const empsql = `SELECT CONCAT (employees.first_name, ' ', employees.last_name) AS employee FROM employees`;
+    const rolesql = `SELECT title FROM roles`;
+    db.query(empsql, (err, rows) => {
         if (err) throw err;
         for (let i = 0; i < rows.length; i++) {
             empChoicesArr.push(rows[i].employee)
         }
-    }) 
-    return empChoicesArr;
-}
-
-getRoleChoices = async () => {
-    const sql = `SELECT title FROM roles`;
-    const roleChoicesArr = [];
-    db.query(sql, (err, rows) => {
-        if (err) throw err;
-        for (let i = 0; i < rows.length; i++) {
-            roleChoicesArr.push(rows[i].title)
-        }
-    })
-    return roleChoicesArr;
-}
-
-const updateEmpRole = async () => {
-    const empChoicesArr = await getEmployeeChoices();
-    const roleChoicesArr = await getRoleChoices();
-
-    inquirer.prompt([
-        {
-            message: "Which employee's role would you like to change?",
-            type: 'list',
-            name: 'empName',
-            choices: empChoicesArr
-        },
-        {
-            message: 'What is the new role of the employee?',
-            type: 'list',
-            name: 'newRole',
-            choices: roleChoicesArr
-        }
-    ])
-    .then(answers => {
-        let empRoleId;
-        let empNameArr = answers.empName.split(' ');
-        const sql = `SELECT id FROM roles WHERE title = '${answers.newRole}'`
-        db.query(sql, (err, rows) => {
+        db.query(rolesql, (err, rows) => {
             if (err) throw err;
-            empRoleId = rows[0].id
-            const updateSql = `UPDATE employees
-            SET role_id = ${empRoleId}
-            WHERE first_name= '${empNameArr[0]}' AND last_name= '${empNameArr[1]}';`
-            db.query(updateSql, (err, rows) => {
-                if (err) throw err;
-                console.log(`${empNameArr[0]} ${empNameArr[1]}'s role has been updated`)
-                actionPrompt();
+            for (let i = 0; i < rows.length; i++) {
+                roleChoicesArr.push(rows[i].title)
+            }
+            inquirer.prompt([
+                {
+                    message: "Which employee's role would you like to change?",
+                    type: 'list',
+                    name: 'empName',
+                    choices: empChoicesArr
+                },
+                {
+                    message: 'What is the new role of the employee?',
+                    type: 'list',
+                    name: 'newRole',
+                    choices: roleChoicesArr
+                }
+            ])
+            .then(answers => {
+                let empRoleId;
+                let empNameArr = answers.empName.split(' ');
+                const roleIdSql = `SELECT id FROM roles WHERE title = '${answers.newRole}'`
+                db.query(roleIdSql, (err, rows) => {
+                    if (err) throw err;
+                    empRoleId = rows[0].id
+                    const updateSql = `UPDATE employees
+                    SET role_id = ${empRoleId}
+                    WHERE first_name= '${empNameArr[0]}' AND last_name= '${empNameArr[1]}';`
+                    db.query(updateSql, (err, rows) => {
+                        if (err) throw err;
+                        console.log(`${empNameArr[0]} ${empNameArr[1]}'s role has been updated`)
+                        actionPrompt();
+                    })
+                })
             })
         })
-    })
+    }) 
 };
 
